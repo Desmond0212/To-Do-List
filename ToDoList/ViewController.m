@@ -61,7 +61,7 @@
     }];
     
     UIAlertAction * actionOK = [UIAlertAction actionWithTitle:@"Add Item" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSString *itemName = alert.textFields.firstObject.text;//itemNameField.text;
+        NSString *itemName = alert.textFields.firstObject.text;
         NSDictionary *item = @{@"name": itemName, @"category": @"Home"};
         [self.items addObject:item];
         NSInteger numHomeItems = [self numberOfItemInCategory:@"Home"];
