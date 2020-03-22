@@ -7,6 +7,10 @@ target 'ToDoList' do
 
   # Pods for ToDoList
 	pod 'Firebase/Analytics'
+	pod 'Firebase/Core'
+	pod 'Firebase/Database'
+	pod 'Firebase/Auth'
+	pod 'Firebase/Storage'
 
   target 'ToDoListTests' do
     inherit! :search_paths

@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 
+@class ViewController;
+
 @interface ViewController () <UIAlertViewDelegate>
 
 @property (nonatomic) NSMutableArray *items;
@@ -15,15 +17,24 @@
 
 @end
 
+@import Firebase;
+@import FirebaseDatabase;
+@import UIKit;
+
 @implementation ViewController
+
+@synthesize ref;
+
+static NSString *toDoData;
+static NSString *toDoLocation;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.items = @[@{@"name": @"take out the trash", @"category": @"Home"}, @{@"name": @"go shopping", @"category": @"Home"}].mutableCopy;
-    self.categories = @[@"Home"]; //, @"Work"
+    self.items = @[@{@"name": @"take out the trash",@"location": @"Home" ,@"category": @"Today"}, @{@"name": @"Car Service on 12 Feb",@"location": @"BMV Car Service Center" ,@"category": @"Today"}].mutableCopy;
+    self.categories = @[@"Today"]; //, @"Work"
     self.navigationItem.title = @"To-Do-List";
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(tongleEditing:)];
@@ -52,7 +63,7 @@
 
 - (void)addNewItem:(UIBarButtonItem *)sender
 {
-    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"New To-Do-List Item" message:@"Please enter the name of the New TO-DO Itme" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"New To-Do-List Item" message:@"Please enter the name of the New TO-DO Item" preferredStyle:UIAlertControllerStyleAlert];
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.placeholder = @"Insert your note here...";
         textField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -60,22 +71,43 @@
         
     }];
     
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Location";
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        textField.borderStyle = UITextBorderStyleRoundedRect;
+        
+    }];
+    
     UIAlertAction * actionOK = [UIAlertAction actionWithTitle:@"Add Item" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        toDoData = alert.textFields.firstObject.text;
+        toDoLocation = alert.textFields.lastObject.text;
         NSString *itemName = alert.textFields.firstObject.text;
-        NSDictionary *item = @{@"name": itemName, @"category": @"Home"};
+        NSString *itemLocation = alert.textFields.lastObject.text;
+        NSDictionary *item = @{@"name": itemName, @"location": itemLocation, @"category": @"Today"};
         [self.items addObject:item];
-        NSInteger numHomeItems = [self numberOfItemInCategory:@"Home"];
+        NSInteger numHomeItems = [self numberOfItemInCategory:@"Today"];
         [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:numHomeItems - 1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-                     }];
+        [self requestAddData];
+    }];
     
     UIAlertAction * actionCANCEL = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                          //Add Another Action
-                     }];
+        
+    }];
 
     [alert addAction:actionOK];
     [alert addAction:actionCANCEL];
 
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+#pragma mark - Service Request Handler
+
+- (void) requestAddData
+{
+    self.ref = [[FIRDatabase database] reference];
+    [[[self.ref child:@"ToDoList"] childByAutoId]
+     setValue:@{@"ToDoData": toDoData, @"Location": toDoLocation}];
 }
 
 #pragma mark - Datasource helper methods
@@ -137,6 +169,7 @@
     NSDictionary *item = [self itemAtIndexPath:indexPath];
     
     cell.textLabel.text = item[@"name"];
+    cell.detailTextLabel.text = item[@"location"];
     
     if ([item[@"completed"] boolValue])
     {
