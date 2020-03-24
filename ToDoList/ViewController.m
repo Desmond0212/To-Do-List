@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "ToDoArray.h"
 
 @class ViewController;
 
@@ -27,12 +28,14 @@
 
 static NSString *toDoData;
 static NSString *toDoLocation;
+static NSString *toDoCategory;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    //[self requestFetchData];
     self.items = @[@{@"name": @"take out the trash",@"location": @"Home" ,@"category": @"Today"}, @{@"name": @"Car Service on 12 Feb",@"location": @"BMV Car Service Center" ,@"category": @"Today"}].mutableCopy;
     self.categories = @[@"Today"]; //, @"Work"
     self.navigationItem.title = @"To-Do-List";
@@ -78,9 +81,17 @@ static NSString *toDoLocation;
         
     }];
     
+    /*[alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"Category";
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        textField.borderStyle = UITextBorderStyleRoundedRect;
+
+    }];*/
+    
     UIAlertAction * actionOK = [UIAlertAction actionWithTitle:@"Add Item" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        toDoData = alert.textFields.firstObject.text;
-        toDoLocation = alert.textFields.lastObject.text;
+        toDoData = alert.textFields[0].text;//firstObject.text;
+        toDoLocation = alert.textFields[1].text;
+        //toDoCategory = alert.textFields[2].text;//lastObject.text;
         NSString *itemName = alert.textFields.firstObject.text;
         NSString *itemLocation = alert.textFields.lastObject.text;
         NSDictionary *item = @{@"name": itemName, @"location": itemLocation, @"category": @"Today"};
@@ -108,6 +119,46 @@ static NSString *toDoLocation;
     self.ref = [[FIRDatabase database] reference];
     [[[self.ref child:@"ToDoList"] childByAutoId]
      setValue:@{@"ToDoData": toDoData, @"Location": toDoLocation}];
+}
+
+- (void) requestFetchData
+{
+    self.ref = [[FIRDatabase database] reference];
+    [[self.ref child:@"ToDoList"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot * _Nonnull snapshot)
+    {
+        NSDictionary *usersDict = snapshot.value;
+        NSLog(@"Information : %@",usersDict);
+        
+        NSArray *toDoArrayList = usersDict[@"ToDoList"];
+        
+//        if ([toDoArrayList isKindOfClass:[NSArray class]])
+//        {
+//            for (NSDictionary *newVal in usersDict)
+//            {
+//                ToDoArray *arrList = [[ToDoArray alloc] init];
+//                arrList.data = [newVal objectForKey:@"ToDoData"];
+//                arrList.location = [newVal objectForKey:@"Location"];
+//
+//                [self.items addObject:arrList];
+//            }
+//        }
+        
+        ToDoArray *arrList = [[ToDoArray alloc] init];
+        arrList.data = [usersDict objectForKey:@"ToDoData"];
+        arrList.location = [usersDict objectForKey:@"Location"];
+        arrList.category = [usersDict objectForKey:@"Category"];
+        [self.items addObject:arrList];
+        
+        NSString *data = [usersDict objectForKey:@"ToDoData"];
+        NSString *location = [usersDict objectForKey:@"Location"];
+        NSString *category = [usersDict objectForKey:@"Category"];
+        
+        //self.items = @[@{@"name": data, @"location": location, @"category": @"Today"}].mutableCopy;
+        self.categories = @[@"Today"];
+
+        NSLog(@"Data: %@,  Location: %@,  Category: %@", data, location, category);
+        [self.tableView reloadData];
+    }];
 }
 
 #pragma mark - Datasource helper methods

@@ -20,6 +20,7 @@
 		F047819B2425C1EC006911CD /* ToDoListTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F047819A2425C1EC006911CD /* ToDoListTests.m */; };
 		F04781A62425C1EC006911CD /* ToDoListUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F04781A52425C1EC006911CD /* ToDoListUITests.m */; };
 		F06547DA24275469008C938B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F06547D924275469008C938B /* GoogleService-Info.plist */; };
+		F093A98B2429279A00011D4D /* ToDoArray.m in Sources */ = {isa = PBXBuildFile; fileRef = F093A98A2429279A00011D4D /* ToDoArray.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,8 @@
 		F04781A52425C1EC006911CD /* ToDoListUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToDoListUITests.m; sourceTree = "<group>"; };
 		F04781A72425C1EC006911CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F06547D924275469008C938B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F093A9892429279A00011D4D /* ToDoArray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToDoArray.h; sourceTree = "<group>"; };
+		F093A98A2429279A00011D4D /* ToDoArray.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToDoArray.m; sourceTree = "<group>"; };
 		FC016F5647F331A256FF4271 /* Pods_ToDoList_ToDoListUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDoList_ToDoListUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -159,6 +162,8 @@
 				F047818C2425C1EC006911CD /* LaunchScreen.storyboard */,
 				F047818F2425C1EC006911CD /* Info.plist */,
 				F04781902425C1EC006911CD /* main.m */,
+				F093A9892429279A00011D4D /* ToDoArray.h */,
+				F093A98A2429279A00011D4D /* ToDoArray.m */,
 			);
 			path = ToDoList;
 			sourceTree = "<group>";
@@ -423,6 +428,7 @@
 				F04781862425C1EB006911CD /* ViewController.m in Sources */,
 				F04781802425C1EB006911CD /* AppDelegate.m in Sources */,
 				F04781912425C1EC006911CD /* main.m in Sources */,
+				F093A98B2429279A00011D4D /* ToDoArray.m in Sources */,
 				F04781832425C1EB006911CD /* SceneDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
